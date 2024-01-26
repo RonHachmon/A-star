@@ -3,31 +3,38 @@ package AStar;
 import java.util.*;
 
 public class AStarPath {
-    private StarPoint[][] grid = new StarPoint[4][7];
+    private StarPoint[][] grid ;
     private StarPoint start=null;
     private StarPoint end=null;
-    private final int GRID_WIDTH = 4;
-    private final int GRID_LENGTH = 7;
+    private final int GRID_WIDTH ;
+    private final int GRID_LENGTH ;
     private Set<StarPoint> enteredPoints = new HashSet<>();
     private Set<StarPoint> finishedPoints = new HashSet<>();
 
-    public AStarPath() {
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 7; j++) {
-                grid[i][j] = new StarPoint(new Point(i, j));
-            }
-        }
-        start = grid[3][1];
-        end = grid[1][6];
-        start.SetCostFromStart(0);
-        setBlockedPath();
+    public AStarPath(Point [] [] inputGrid) {
+        GRID_WIDTH=inputGrid.length;
+        GRID_LENGTH=inputGrid[0].length;
+        initializeGrid(inputGrid);
+
+    }
+    public void SetStartPoint(Point start) {
+        this.start=grid[start.getX()][start.getY()];
+        this.start.SetCostFromStart(0);
+    }
+    public void SetEndPoint(Point end) {
+        this.end=grid[end.getX()][end.getY()];
     }
 
-    private void setBlockedPath() {
-        grid[1][3].setBlocked(true);
-        grid[1][4].setBlocked(true);
-        grid[2][4].setBlocked(true);
+    private void initializeGrid(Point[][] inputGrid) {
+        this.grid=new StarPoint[GRID_WIDTH][GRID_LENGTH];
+        for (int i = 0; i < GRID_WIDTH; i++) {
+            for (int j = 0; j < GRID_LENGTH; j++) {
+                grid[i][j] = new StarPoint(inputGrid[i][j]);
+            }
+        }
     }
+
+
 
     public void getPath() {
         enteredPoints.add(start);
@@ -96,7 +103,7 @@ public class AStarPath {
         for (Point neighbour : neighbours) {
             if (isPointInGridBorder(neighbour)) {
                 StarPoint neighbourPoint = grid[neighbour.getX()][neighbour.getY()];
-                if (!neighbourPoint.isBlocked() && !this.finishedPoints.contains(neighbourPoint)) {
+                if (!neighbourPoint.getCurrentPoint().isBlocked()&& !this.finishedPoints.contains(neighbourPoint)) {
                     updateStarPointCost(currentPoint, neighbourPoint);
 
                 }
