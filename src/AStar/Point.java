@@ -7,6 +7,7 @@ import java.util.Objects;
 public class Point {
     private final int x;
     private final int y;
+    private boolean isBlocked=false;
 
 
     public Point(int x, int y) {
@@ -23,6 +24,14 @@ public class Point {
     public int getY() {
         return y;
     }
+    public void setBlocked(boolean blocked) {
+        isBlocked = blocked;
+    }
+
+    public boolean isBlocked() {
+        return isBlocked;
+    }
+
 
 
 
@@ -31,7 +40,7 @@ public class Point {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
-        return x == point.x && y == point.y;
+        return x == point.x && y == point.y && this.isBlocked== point.isBlocked;
     }
 
     @Override

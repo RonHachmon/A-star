@@ -8,7 +8,6 @@ public class StarPoint {
     private Point parent;
     private Cost cost=new Cost();
 
-    private boolean isBlocked=false;
 
     public StarPoint(Point currentPoint) {
         this.currentPoint = currentPoint;
@@ -44,13 +43,7 @@ public class StarPoint {
     }
 
 
-    public boolean isBlocked() {
-        return isBlocked;
-    }
 
-    public void setBlocked(boolean blocked) {
-        isBlocked = blocked;
-    }
 
 
     public Integer GetTotalCost() {
@@ -73,6 +66,6 @@ public class StarPoint {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StarPoint starPoint = (StarPoint) o;
-        return isBlocked == starPoint.isBlocked && Objects.equals(currentPoint, starPoint.currentPoint) && Objects.equals(parent, starPoint.parent) && Objects.equals(cost, starPoint.cost);
+        return  Objects.equals(currentPoint, starPoint.currentPoint) && Objects.equals(parent, starPoint.parent) && Objects.equals(cost, starPoint.cost);
     }
 }
