@@ -1,4 +1,4 @@
-package AStar;
+package app.AStar;
 
 public  class Cost {
     private Integer costFromStart;

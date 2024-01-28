@@ -1,4 +1,4 @@
-package AStar;
+package app.AStar;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,5 +76,10 @@ public class Point {
 
     public boolean IsVerticalOrHorizontalToPoint(Point currentPoint) {
         return x == currentPoint.x || y == currentPoint.y;
+    }
+
+    @Override
+    public String toString() {
+        return "(" + x +"," + y +")";
     }
 }

@@ -1,8 +1,13 @@
-import AStar.Point;
+package app;
 
+import app.AStar.Point;
+
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class FileToMazeConvertor {
@@ -14,14 +19,42 @@ public class FileToMazeConvertor {
     private Point endPoint;
     private final Point[][] maze;
     public FileToMazeConvertor(String fileName) {
-        try {
-            List<String> strings = Files.readAllLines(Paths.get(fileName));
-            maze=new Point[strings.size()][strings.get(0).length()];
-            buildMaze(strings);
+        try (InputStream inputStream = getClass().getClassLoader().getResourceAsStream(fileName)) {
+            if (inputStream == null) {
+                throw new RuntimeException("File not found: " + fileName);
+            }
+
+            List<String> lines = readLinesFromInputStream(inputStream);
+
+            maze = new Point[lines.size()][lines.get(0).length()];
+
+            buildMaze(lines);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
+    private List<String> readLinesFromInputStream(InputStream inputStream) throws IOException {
+        List<String> lines = new ArrayList<>();
+
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+            String line=reader.readLine();
+            while (line != null) {
+                lines.add(line);
+                line=reader.readLine();
+            }
+        }
+
+        return lines;
+    }
+//    public FileToMazeConvertor(String fileName) {
+//        try {
+//            List<String> strings = Files.readAllLines(Paths.get(fileName));
+//            maze=new Point[strings.size()][strings.get(0).length()];
+//            buildMaze(strings);
+//        } catch (IOException e) {
+//            throw new RuntimeException(e);
+//        }
+//    }
 
     private void buildMaze(List<String> strings) {
         for (int i = 0; i < strings.size(); i++) {

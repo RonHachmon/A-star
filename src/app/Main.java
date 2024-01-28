@@ -1,4 +1,10 @@
-import AStar.AStarPath;
+package app;
+
+import app.AStar.AStarPath;
+import app.gui.PathPrinter;
+
+
+
 public class Main {
     public static void main(String[] args) {
         runPathFind3();
@@ -6,9 +12,12 @@ public class Main {
     }
 
     private static void runPathFind() {
-        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("src/inputs/4X7_maze");
+        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("resources/4X7_maze.txt");
         AStarPath path = setPathParameters(fileToMazeConvertor);
         path.getPath();
+        PathPrinter pathPrinter = new PathPrinter(path);
+        System.out.println();
+        pathPrinter.Print();
 
     }
 
@@ -20,13 +29,17 @@ public class Main {
     }
 
     private static void runPathFind2() {
-        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("src/inputs/6X11_maze");
+        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("resources/6X11_maze");
         AStarPath path = setPathParameters(fileToMazeConvertor);
         path.getPath();
     }
     private static void runPathFind3() {
-        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("src/inputs/12X13_maze");
+        FileToMazeConvertor fileToMazeConvertor = new FileToMazeConvertor("resources/12X13_maze");
         AStarPath path = setPathParameters(fileToMazeConvertor);
         path.getPath();
+        PathPrinter pathPrinter = new PathPrinter(path);
+        System.out.println();
+        pathPrinter.Print();
+
     }
 }

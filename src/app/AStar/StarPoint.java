@@ -1,12 +1,12 @@
-package AStar;
+package app.AStar;
 
 import java.util.Objects;
 
 public class StarPoint {
-    private Point currentPoint;
+    private final Point currentPoint;
 
     private Point parent;
-    private Cost cost=new Cost();
+    private final Cost cost=new Cost();
 
 
     public StarPoint(Point currentPoint) {
@@ -67,5 +67,10 @@ public class StarPoint {
         if (o == null || getClass() != o.getClass()) return false;
         StarPoint starPoint = (StarPoint) o;
         return  Objects.equals(currentPoint, starPoint.currentPoint) && Objects.equals(parent, starPoint.parent) && Objects.equals(cost, starPoint.cost);
+    }
+
+    @Override
+    public String toString() {
+        return currentPoint.toString();
     }
 }
