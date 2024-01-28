@@ -1,15 +1,21 @@
-package AStar;
+package app.AStar;
 
 import java.util.*;
+import java.util.ArrayList;
 
 public class AStarPath {
+    private final int GRID_WIDTH ;
+    private final int GRID_LENGTH ;
     private StarPoint[][] grid ;
     private StarPoint start=null;
     private StarPoint end=null;
-    private final int GRID_WIDTH ;
-    private final int GRID_LENGTH ;
-    private Set<StarPoint> enteredPoints = new HashSet<>();
-    private Set<StarPoint> finishedPoints = new HashSet<>();
+
+
+
+    private List<Point> pathToEnd = new ArrayList<>() ;
+
+    private Set<StarPoint> enteredPoints = new LinkedHashSet<>();
+    private Set<StarPoint> finishedPoints = new LinkedHashSet<>();
 
     public AStarPath(Point [] [] inputGrid) {
         GRID_WIDTH=inputGrid.length;
@@ -65,10 +71,13 @@ public class AStarPath {
         Stack<String> path = new Stack<>();
         Point parent = end.getCurrentPoint();
         do {
-            path.add("(" + parent.getX() + " " + parent.getY() + ")");
+            this.pathToEnd.add(parent);
+            path.add(String.format("(%d %d)", parent.getX(), parent.getY()));
             parent = grid[parent.getX()][parent.getY()].getParent();
         }
         while (parent != null);
+        Collections.reverse(this.pathToEnd);
+
 
         while (!path.isEmpty()) {
             if(path.size() == 1)
@@ -112,7 +121,7 @@ public class AStarPath {
     }
 
     private void updateStarPointCost(StarPoint currentPoint, StarPoint neighbourPoint) {
-        neighbourPoint.SetHeuristicCost(this.calculateHcost(neighbourPoint.getCurrentPoint()));
+        neighbourPoint.SetHeuristicCost(this.calculateHeuristicCost(neighbourPoint.getCurrentPoint()));
         int addValue;
         if (this.isPointVerticalOrHorizontal(currentPoint, neighbourPoint)) {
             addValue = 10;
@@ -128,7 +137,7 @@ public class AStarPath {
     }
 
 
-    private int calculateHcost(Point currentPoint) {
+    private int calculateHeuristicCost(Point currentPoint) {
         int a = Math.abs(currentPoint.getX() - end.getCurrentPoint().getX());
         int b = Math.abs(currentPoint.getY() - end.getCurrentPoint().getY());
 
@@ -143,4 +152,26 @@ public class AStarPath {
     private boolean isPointInGridBorder(Point point) {
         return point.getX() >= 0 && point.getX() < GRID_WIDTH && point.getY() >= 0 && point.getY() < GRID_LENGTH;
     }
+
+    public Set<StarPoint> getFinishedPoints() {
+        return finishedPoints;
+    }
+
+    public StarPoint[][] getGrid() {
+        return grid;
+    }
+
+    public StarPoint getStart() {
+        return start;
+    }
+
+    public StarPoint getEnd() {
+        return end;
+    }
+    public List<Point> getPathToEnd() {
+        return pathToEnd;
+    }
+
+
+
 }
