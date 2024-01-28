@@ -2,7 +2,7 @@ package app;
 
 import app.AStar.AStarPath;
 import app.gui.PathPrinter;
-
+import utils.FileToMazeConvertor;
 
 
 public class Main {

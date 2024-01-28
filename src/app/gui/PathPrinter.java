@@ -59,16 +59,16 @@ public class PathPrinter {
     }
 
     public void Print() {
+        clearWindowsTerminalScreen();
         printMaze();
         Set<StarPoint> enteredPoints = path.getFinishedPoints();
-        System.out.println();
         for (StarPoint enterPoint : enteredPoints) {
             if(enterPoint!=path.getStart()&& enterPoint!=path.getEnd())
             {
                 ColoredString coloredString = coloredMap[enterPoint.getCurrentPoint().getX()][enterPoint.getCurrentPoint().getY()];
                 coloredString.setColor(StringPrintEffect.BLUE);
                 coloredString.setEffect(StringPrintEffect.BOLD);
-                sleep(300);
+                sleep(250);
                 clearWindowsTerminalScreen();
                 printMaze();
             }
@@ -113,13 +113,11 @@ public class PathPrinter {
     }
 
     private void printMaze() {
-        System.out.println("_________________________");
         for (int i = 0; i < coloredMap.length; i++) {
             for (int j = 0; j < coloredMap[0].length; j++) {
                 System.out.print(coloredMap[i][j]);
             }
             System.out.println();
         }
-        System.out.println("_________________________");
     }
 }
