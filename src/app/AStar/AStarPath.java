@@ -11,7 +11,7 @@ public class AStarPath {
     private StarPoint end=null;
 
 
-
+    private boolean isDebugMode=false;
     private List<Point> pathToEnd = new ArrayList<>() ;
 
     private Set<StarPoint> enteredPoints = new LinkedHashSet<>();
@@ -48,7 +48,9 @@ public class AStarPath {
         visitPoint(start);
         while (!enteredPoints.contains(end) || enteredPoints.isEmpty()) {
             StarPoint minCostPoint = this.findMinCostPoint();
-            System.out.println("last visited Min point (" + minCostPoint.getCurrentPoint().getX() + " " + minCostPoint.getCurrentPoint().getY() + ")");
+            if(isDebugMode) {
+                System.out.println("last visited Min point (" + minCostPoint.getCurrentPoint().getX() + " " + minCostPoint.getCurrentPoint().getY() + ")");
+            }
             visitPoint(minCostPoint);
             updateAllValidNeighboursCost(minCostPoint);
 
@@ -78,13 +80,14 @@ public class AStarPath {
         while (parent != null);
         Collections.reverse(this.pathToEnd);
 
+        if(isDebugMode) {
+            while (!path.isEmpty()) {
+                if (path.size() == 1)
+                    System.out.print(path.pop());
+                else
+                    System.out.print(path.pop() + " -> ");
 
-        while (!path.isEmpty()) {
-            if(path.size() == 1)
-                System.out.print(path.pop());
-            else
-                System.out.print(path.pop() + " -> ");
-
+            }
         }
 
     }
