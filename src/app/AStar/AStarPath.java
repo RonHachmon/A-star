@@ -14,7 +14,7 @@ public class AStarPath {
     private boolean isDebugMode=false;
     private List<Point> pathToEnd = new ArrayList<>() ;
 
-    private Set<StarPoint> enteredPoints = new LinkedHashSet<>();
+    private PriorityQueue<StarPoint> enteredPoints =new PriorityQueue<>();
     private Set<StarPoint> finishedPoints = new LinkedHashSet<>();
 
     public AStarPath(Point [] [] inputGrid) {
@@ -42,12 +42,11 @@ public class AStarPath {
 
 
 
-    public void getPath() {
-        enteredPoints.add(start);
+    public void findPath() {
         this.updateAllValidNeighboursCost(start);
         visitPoint(start);
         while (!enteredPoints.contains(end) || enteredPoints.isEmpty()) {
-            StarPoint minCostPoint = this.findMinCostPoint();
+            StarPoint minCostPoint = this.removeMinCost();
             if(isDebugMode) {
                 System.out.println("last visited Min point (" + minCostPoint.getCurrentPoint().getX() + " " + minCostPoint.getCurrentPoint().getY() + ")");
             }
@@ -55,59 +54,46 @@ public class AStarPath {
             updateAllValidNeighboursCost(minCostPoint);
 
         }
+        this.buildPath();
 
-        if(enteredPoints.contains(end)) {
-            this.printPath();
-        }
-        else {
-            System.out.println("Path not found");
-        }
     }
 
     private void visitPoint(StarPoint start) {
-        enteredPoints.remove(start);
         finishedPoints.add(start);
     }
-
-    private void printPath() {
-        Stack<String> path = new Stack<>();
+    private void buildPath() {
         Point parent = end.getCurrentPoint();
         do {
             this.pathToEnd.add(parent);
-            path.add(String.format("(%d %d)", parent.getX(), parent.getY()));
             parent = grid[parent.getX()][parent.getY()].getParent();
         }
         while (parent != null);
         Collections.reverse(this.pathToEnd);
 
-        if(isDebugMode) {
-            while (!path.isEmpty()) {
-                if (path.size() == 1)
-                    System.out.print(path.pop());
-                else
-                    System.out.print(path.pop() + " -> ");
-
-            }
-        }
-
     }
 
-    private StarPoint findMinCostPoint() {
-        StarPoint minPoint = null;
-        for (StarPoint point : enteredPoints) {
-            if (minPoint == null) {
-                minPoint = point;
-            } else {
-                if (point.GetTotalCost() < minPoint.GetTotalCost()) {
-                    minPoint = point;
-                }
-                if (point.GetTotalCost() == minPoint.GetTotalCost() && point.GetHeuristicCost() < minPoint.GetHeuristicCost()) {
-                    minPoint = point;
-                }
-            }
+    private void printPath() {
+        if(end.getParent()==null) {
+            System.out.println("Path not found");
+            return;
         }
 
-        return minPoint;
+        for (int i = 0; i <this.pathToEnd.size() ; i++) {
+            Point point = pathToEnd.get(i);
+            if(i!=this.pathToEnd.size()-1) {
+                System.out.print(String.format("(%d %d) -> ", point.getX(), point.getY()));
+            }
+            else {
+                System.out.print(String.format("(%d %d)", point.getX(), point.getY()));
+            }
+
+
+        }
+    }
+
+    private StarPoint removeMinCost() {
+
+        return this.enteredPoints.poll();
     }
 
     private void updateAllValidNeighboursCost(StarPoint currentPoint) {
@@ -117,7 +103,7 @@ public class AStarPath {
                 StarPoint neighbourPoint = grid[neighbour.getX()][neighbour.getY()];
                 if (!neighbourPoint.getCurrentPoint().isBlocked()&& !this.finishedPoints.contains(neighbourPoint)) {
                     updateStarPointCost(currentPoint, neighbourPoint);
-
+                    enteredPoints.add(neighbourPoint);
                 }
             }
         }
@@ -125,18 +111,13 @@ public class AStarPath {
 
     private void updateStarPointCost(StarPoint currentPoint, StarPoint neighbourPoint) {
         neighbourPoint.SetHeuristicCost(this.calculateHeuristicCost(neighbourPoint.getCurrentPoint()));
-        int addValue;
-        if (this.isPointVerticalOrHorizontal(currentPoint, neighbourPoint)) {
-            addValue = 10;
-        } else {
-            addValue = 14;
-        }
+        int addValue =this.isPointVerticalOrHorizontal(currentPoint, neighbourPoint)? 10:14 ;
+
         if (neighbourPoint.GetCostFromStart() == null || neighbourPoint.GetCostFromStart() > currentPoint.GetCostFromStart() + addValue) {
             neighbourPoint.SetCostFromStart(currentPoint.GetCostFromStart() + addValue);
             neighbourPoint.setParent(currentPoint.getCurrentPoint());
 
         }
-        enteredPoints.add(neighbourPoint);
     }
 
 

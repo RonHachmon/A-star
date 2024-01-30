@@ -2,7 +2,7 @@ package app.AStar;
 
 import java.util.Objects;
 
-public class StarPoint {
+public class StarPoint implements Comparable<StarPoint> {
     private final Point currentPoint;
 
     private Point parent;
@@ -72,5 +72,12 @@ public class StarPoint {
     @Override
     public String toString() {
         return currentPoint.toString();
+    }
+
+    @Override
+    public int compareTo(StarPoint other) {
+        int compare = Integer.compare(this.GetTotalCost(), other.GetTotalCost());
+
+        return compare==0?Integer.compare(this.GetHeuristicCost(), other.GetHeuristicCost()):compare;
     }
 }
